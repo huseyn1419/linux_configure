@@ -103,6 +103,8 @@ menu_linux() {
   while [ 1 ] ; do
     printf "$line \n"
     printf "10 flatpak \n"
+    printf "11 programs \n"
+    printf "12 umask \n"
     printf "50 configure vim \n"
     printf " b back \n"
     printf " q quit \n"
@@ -123,8 +125,12 @@ menu_linux() {
       menu_flatpak
       ;;
 
-      20)
-      umask_000
+      11)
+      menu_programs
+      ;;
+
+      12)
+      menu_umask
       ;;
 
       50)
@@ -401,6 +407,70 @@ done
 
 }
 
+menu_programs() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf "10 firefox \n"
+    printf " b back \n"
+    printf " q quit \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      10)
+      menu_firefox
+      ;;
+
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+
+}
+
+menu_firefox() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf "10 fix font \n"
+    printf " b back \n"
+    printf " q quit \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      10)
+      firefox_fix_font
+      ;;
+
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+
+}
+
 menu_proxmox() {
   while [ 1 ] ; do
     printf "$line \n"
@@ -433,9 +503,51 @@ done
 
 }
 
+menu_umask() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf "10 umask 000 all of them \n"
+    printf "11 umask 000 /etc/profile \n"
+    printf "12 umask 000 /etc/login.defs \n"
+    printf "13 umask 000 /etc/bash.bashrc \n"
+    printf " b back \n"
+    printf " q quit \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      11)
+      umask_etc_profile_000
+      ;;
+
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+
+}
+
 #========================================
 #               menus end
 #========================================
+
+firefox_fix_font() {
+
+  mkdir -p ~/.var/app/org.mozilla.firefox/config/fontconfig/conf.d/
+  cp /etc/fonts/conf.d/*.conf ~/.var/app/org.mozilla.firefox/config/fontconfig/conf.d/
+
+  }
 
 flatpak_flathub() {
   flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -447,7 +559,7 @@ flatpak_flathub_beta() {
   printf "flathub beta activated \n"
   }
 
-umask_000() {
+umask_etc_profile_000() {
   cat <<'eof' >> /etc/profile
 umask 000
 eof
