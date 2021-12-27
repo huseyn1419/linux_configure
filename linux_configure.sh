@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# version: 0.0.1
-
 # description: auto setup script to setup required programs and configure after doing fresh install
 
 # check if root
@@ -11,7 +9,9 @@
 #               variables start
 #========================================
 
+version="0.0.2"
 line="========================================"
+
 
 #========================================
 #               variables end
@@ -29,15 +29,17 @@ line="========================================"
 main() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf "linux configurator \n"
+    printf "version $version \n"
+    printf "$line \n"
+    printf " q quit \n"
     printf "10 linux (general) \n"
     printf "11 distributions \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
 
     case ${option} in
-
       q)
       exit
       ;;
@@ -63,10 +65,10 @@ done
 menu_distributions() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 debian \n"
     printf "20 proxmox \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -87,7 +89,7 @@ menu_distributions() {
       20)
       menu_proxmox
       ;;
-
+      
       *)
       printf "invalid option \n"
       ;;
@@ -102,12 +104,13 @@ done
 menu_linux() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 flatpak \n"
     printf "11 programs \n"
     printf "12 umask \n"
+    printf "13 configure swappiness \n"
     printf "50 configure vim \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -132,6 +135,10 @@ menu_linux() {
       12)
       menu_umask
       ;;
+      
+      13)
+      configure_swappiness
+      ;;
 
       50)
       configure_vim
@@ -149,10 +156,10 @@ done
 menu_flatpak() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 add flathub.org \n"
     printf "11 add flathub.org beta \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -186,27 +193,28 @@ done
 menu_debian() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 keyboard layout \n"
     printf "11 apt repositories \n"
     printf "12 flatpak \n"
     printf "13 grub \n"
     printf "14 enable multi arch i386 \n"
+    printf "15 empty /etc/motd \n"
     printf "20 server gui lightweight \n"
+    printf "21 auto configure \n"
     printf "99 write how-to to file \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
 
     case ${option} in
+      q)
+      exit
+      ;;
 
       b)
       break
-      ;;
-
-      q)
-      exit
       ;;
 
       10)
@@ -228,11 +236,19 @@ menu_debian() {
       14)
       debian_multiarch
       ;;
+      
+      15)
+      debian_motd
+      ;;
 
       20)
       debian_gui_lightweight
       ;;
 
+      21)
+      menu_debian_configure_auto
+      ;;
+      
       99)
       debian_how_to_file
       ;;
@@ -249,10 +265,10 @@ done
 menu_debian_keyboard_layout() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 turkish f - turkish q - english us \n"
     printf "11 turkish q - turkish f - english us \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -286,14 +302,14 @@ done
 menu_debian_apt() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 update sources.list \n"
     printf "11 pin to stable \n"
     printf "12 pin to testing \n"
     printf "13 pin to unstable \n"
     printf "14 enable source packages \n"
     printf "15 disable apt icon downloading \n"
-    printf " b back \n"
-    printf " q quit \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -343,8 +359,8 @@ done
 menu_debian_flatpak() {
   while [ 1 ] ; do
     printf "$line \n"
-    printf " b back \n"
     printf " q quit \n"
+    printf " b back \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -378,9 +394,10 @@ done
 menu_debian_grub() {
   while [ 1 ] ; do
     printf "$line \n"
-    printf "10 initial configuration \n"
-    printf " b back \n"
     printf " q quit \n"
+    printf " b back \n"
+    printf "10 initial configuration \n"
+    printf "11 initial configuration turkish \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -395,7 +412,48 @@ menu_debian_grub() {
       ;;
 
       10)
-      grub
+      configure_grub en
+      ;;
+      
+      11)
+      configure_grub tr
+      ;;
+
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+
+}
+
+menu_debian_configure_auto() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
+    printf "10 server \n"
+    printf "11 end user \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      10)
+      example_1
+      ;;
+
+      11)
+      example_2
       ;;
 
       *)
@@ -410,9 +468,9 @@ done
 menu_programs() {
   while [ 1 ] ; do
     printf "$line \n"
-    printf "10 firefox \n"
-    printf " b back \n"
     printf " q quit \n"
+    printf " b back \n"
+    printf "10 firefox \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -442,9 +500,9 @@ done
 menu_firefox() {
   while [ 1 ] ; do
     printf "$line \n"
-    printf "10 fix font \n"
-    printf " b back \n"
     printf " q quit \n"
+    printf " b back \n"
+    printf "10 fix font \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -474,9 +532,9 @@ done
 menu_proxmox() {
   while [ 1 ] ; do
     printf "$line \n"
-    printf "10 apt initial configuration \n"
-    printf " b back \n"
     printf " q quit \n"
+    printf " b back \n"
+    printf "10 apt initial configuration \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -506,12 +564,13 @@ done
 menu_umask() {
   while [ 1 ] ; do
     printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
     printf "10 umask 000 all of them \n"
     printf "11 umask 000 /etc/profile \n"
     printf "12 umask 000 /etc/login.defs \n"
     printf "13 umask 000 /etc/bash.bashrc \n"
-    printf " b back \n"
-    printf " q quit \n"
+    printf "14 umask 000 to (systemd gdm) \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -528,7 +587,11 @@ menu_umask() {
       11)
       umask_etc_profile_000
       ;;
-
+      
+      14)
+      umask_gdm_000
+      ;;
+      
       *)
       printf "invalid option \n"
       ;;
@@ -543,11 +606,10 @@ done
 #========================================
 
 firefox_fix_font() {
-
   mkdir -p ~/.var/app/org.mozilla.firefox/config/fontconfig/conf.d/
   cp /etc/fonts/conf.d/*.conf ~/.var/app/org.mozilla.firefox/config/fontconfig/conf.d/
 
-  }
+}
 
 flatpak_flathub() {
   flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -557,7 +619,7 @@ flatpak_flathub() {
 flatpak_flathub_beta() {
   flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
   printf "flathub beta activated \n"
-  }
+}
 
 umask_etc_profile_000() {
   cat <<'eof' >> /etc/profile
@@ -566,8 +628,24 @@ eof
   printf "(umask 000) to (/etc/profile) written \n"
 }
 
-configure_vim() {
+umask_gdm_000() {
+  cat <<'eof' >> /etc/systemd/system/gdm.service.d/umask.conf
+[Service]
+UMask=0000
+eof
+  printf "(umask 000) to (/etc/systemd/system/gdm.service.d/umask.conf) written \n"
+}
 
+
+configure_swappiness() {
+  cat <<'eof' > /etc/sysctl.d/99-swappiness.conf
+vm.swappiness=1
+eof
+
+}
+
+
+configure_vim() {
   cat <<'eof' > ~/.vimrc
 "" open line numbers
 set number
@@ -598,9 +676,27 @@ eof
 
 }
 
-debian_how_to_file() {
+debian_motd() {
+  echo "" > /etc/motd
+}
 
-cat <<'eof' > debian_how_to.txt
+debian_configure_end_user_auto() {
+  debian_motd
+  
+  debian_apt_sources_list
+  debian_apt_pin_testing
+  
+  debian_keyboard_turkish_f_turkish_q
+  
+  configure_swappiness
+  
+  
+  debian_how_to_file
+}
+
+
+debian_how_to_file() {
+  cat <<'eof' > debian_how_to.txt
 
 ========================================
 connect to the internet
@@ -608,15 +704,15 @@ connect to the internet
 dhclient enp2s0
 ========================================
 
+
+
 ========================================
 download script
 
 wget ftp.ehlinur.org/linux_configure.sh
 ========================================
 
-========================================
-umask to /etc/profile
-========================================
+
 
 ========================================
 add swap partition and configure it
@@ -626,15 +722,18 @@ chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
 /swapfile none swap defaults 0 0
-
-
-/etc/sysctl.d/99-swappiness.conf
-vm.swappiness=1
 ========================================
+
+
 
 ========================================
 add noatime option to all filesystems in fstab file
+excluding swap all partitions add option noatime
+========================================
 
+
+
+========================================
 # write to /etc/fstab
 #======================================
 # system
@@ -643,8 +742,9 @@ UUID=1813-2805                            /boot/efi  vfat    noatime,umask=0077 
 
 /swapfile                                 none       swap    defaults                  0  0
 #======================================
-
 ========================================
+
+
 
 ========================================
 # configure apt
@@ -652,6 +752,8 @@ UUID=1813-2805                            /boot/efi  vfat    noatime,umask=0077 
 sources.list
 apt pin to testing
 ========================================
+
+
 
 ========================================
 # sudo
@@ -664,6 +766,8 @@ usermod -aG sudo user
 or
 visudo
 ========================================
+
+
 
 ========================================
 # flatpak
@@ -678,6 +782,8 @@ apt install flatpak
 # flatpak only app store
 ========================================
 
+
+
 ========================================
 # configure grub
 
@@ -686,6 +792,8 @@ apt install flatpak
 ## black wallpaper
 copy black
 ========================================
+
+
 
 ========================================
 # firmware
@@ -699,12 +807,16 @@ apt install amd64-microcode
 apt install intel-microcode
 ========================================
 
+
+
 ========================================
 # server programs
 
 xorg xinit openbox tint2
 tmux fish htop
 ========================================
+
+
 
 ========================================
 # minimal base/core
@@ -718,6 +830,8 @@ papirus-icon-theme
 mpv
 ========================================
 
+
+
 ========================================
 # minimal base/core
 gnome-core
@@ -725,35 +839,44 @@ gnome-core
 gnome-tweaks
 ========================================
 
+
+
 ========================================
 virt-manager
 ========================================
 
+
+
 ========================================
-flathub
-chromium
+
 firefox
-
-libreoffice
-
-okular
+chromium
 
 qbittorrent
 
+anydesk
+
+libreoffice
+calibre
+okular
+evince
+
+celluloid
+
 pulseeffects
 pavucontrol
+easyeffects
 
 flatseal
-vlc
-
-anydesk
 
 telegram
 
 cherrytree
 bottles
-
+zoom
 ========================================
+
+
 
 ========================================
 # make bootup theme blank screen
@@ -2150,32 +2273,29 @@ debian_keyboard_turkish_q_turkish_f() {
   sed -i 's/.*XKBVARIANT.*/XKBVARIANT=",f,"/' /etc/default/keyboard
 }
 
-grub() {
-  sed -i 's/.*GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub
-    cat <<'eof' > /boot/grub/custom.cfg
-menuentry "restart" {
-  reboot
-}
-
-menuentry "power off" {
-  halt
-}
-eof
-
-}
-
 configure_grub() {
   # usage:
-  # configure_grub timeoutsüresi language
-  # configure_grub 0 tr
-  # configure_grub 2 en
-  mv /etc/grub.d/05_debian_theme /root/
+  # configure_grub language
+  # configure_grub tr
+  # configure_grub en
+  
+  # disable debian theming
+  chmod -x /etc/grub.d/05_debian_theme
+  
+  # disable log messages while opening pc
   sed -i 's/.*GRUB_CMDLINE_LINUX_DEFAULT.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub
-  if [ $1 = "0" ]; then
-    sed -i 's/.*GRUB_TIMEOUT.*/GRUB_TIMEOUT=0/' /etc/default/grub
+  
+  if [ $1 = "tr" ]; then
+    cat <<'eof' > /boot/grub/custom.cfg
+menuentry "bilgisayari yeniden baslat" {
+  reboot
+}
+
+menuentry "bilgisayari kapat" {
+  halt
+}
+eof
   else
-    sed -i 's/.*GRUB_TIMEOUT.*/GRUB_TIMEOUT=2/' /etc/default/grub
-  fi
     cat <<'eof' > /boot/grub/custom.cfg
 menuentry "restart" {
   reboot
@@ -2185,6 +2305,9 @@ menuentry "power off" {
   halt
 }
 eof
+  fi
+    
+    
 
 }
 
