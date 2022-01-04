@@ -9,7 +9,7 @@
 #               variables start
 #========================================
 
-version="0.0.2"
+version="0.0.3"
 line="========================================"
 
 
@@ -110,7 +110,6 @@ menu_linux() {
     printf "11 programs \n"
     printf "12 umask \n"
     printf "13 configure swappiness \n"
-    printf "50 configure vim \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -137,11 +136,7 @@ menu_linux() {
       ;;
       
       13)
-      configure_swappiness
-      ;;
-
-      50)
-      configure_vim
+      swappiness_configure
       ;;
 
       *)
@@ -412,11 +407,11 @@ menu_debian_grub() {
       ;;
 
       10)
-      configure_grub en
+      grub_configure en
       ;;
       
       11)
-      configure_grub tr
+      grub_configure tr
       ;;
 
       *)
@@ -471,6 +466,7 @@ menu_programs() {
     printf " q quit \n"
     printf " b back \n"
     printf "10 firefox \n"
+    printf "11 vim \n"
     printf "$line \n"
     printf "select option: "
     read option
@@ -486,6 +482,10 @@ menu_programs() {
 
       10)
       menu_firefox
+      ;;
+      
+      11)
+      menu_vim
       ;;
 
       *)
@@ -518,6 +518,38 @@ menu_firefox() {
 
       10)
       firefox_fix_font
+      ;;
+
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+
+}
+
+menu_vim() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf "10 vim configure \n"
+    printf " b back \n"
+    printf " q quit \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      10)
+      vim_configure
       ;;
 
       *)
@@ -637,7 +669,7 @@ eof
 }
 
 
-configure_swappiness() {
+swappiness_configure() {
   cat <<'eof' > /etc/sysctl.d/99-swappiness.conf
 vm.swappiness=1
 eof
@@ -645,7 +677,7 @@ eof
 }
 
 
-configure_vim() {
+vim_configure() {
   cat <<'eof' > ~/.vimrc
 "" open line numbers
 set number
@@ -2273,11 +2305,11 @@ debian_keyboard_turkish_q_turkish_f() {
   sed -i 's/.*XKBVARIANT.*/XKBVARIANT=",f,"/' /etc/default/keyboard
 }
 
-configure_grub() {
+grub_configure() {
   # usage:
-  # configure_grub language
-  # configure_grub tr
-  # configure_grub en
+  # grub_configure language
+  # grub_configure tr
+  # grub_configure en
   
   # disable debian theming
   chmod -x /etc/grub.d/05_debian_theme
