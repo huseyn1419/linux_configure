@@ -9,7 +9,7 @@
 #               variables start
 #========================================
 
-version="0.0.3"
+version="0.0.4"
 line="========================================"
 
 
@@ -155,6 +155,7 @@ menu_flatpak() {
     printf " b back \n"
     printf "10 add flathub.org \n"
     printf "11 add flathub.org beta \n"
+    printf "12 programs"
     printf "$line \n"
     printf "select option: "
     read option
@@ -175,6 +176,10 @@ menu_flatpak() {
       11)
       flatpak_flathub_beta
       ;;
+      
+      12)
+      flatpak_menu_programs
+      ;;
 
       *)
       printf "invalid option \n"
@@ -190,12 +195,13 @@ menu_debian() {
     printf "$line \n"
     printf " q quit \n"
     printf " b back \n"
-    printf "10 keyboard layout \n"
-    printf "11 apt repositories \n"
-    printf "12 flatpak \n"
-    printf "13 grub \n"
-    printf "14 enable multi arch i386 \n"
-    printf "15 empty /etc/motd \n"
+    printf "10 update \n"
+    printf "11 keyboard layout \n"
+    printf "12 apt repositories \n"
+    printf "13 flatpak \n"
+    printf "14 grub \n"
+    printf "15 enable multi arch i386 \n"
+    printf "16 empty /etc/motd \n"
     printf "20 server gui lightweight \n"
     printf "21 auto configure \n"
     printf "99 write how-to to file \n"
@@ -213,26 +219,30 @@ menu_debian() {
       ;;
 
       10)
+      debian_update
+      ;;
+      
+      11)
       menu_debian_keyboard_layout
       ;;
 
-      11)
+      12)
       menu_debian_apt
       ;;
 
-      12)
+      13)
       menu_debian_flatpak
       ;;
 
-      13)
+      14)
       menu_debian_grub
       ;;
 
-      14)
+      15)
       debian_multiarch
       ;;
       
-      15)
+      16)
       debian_motd
       ;;
 
@@ -630,7 +640,6 @@ menu_umask() {
 
     esac
 done
-
 }
 
 #========================================
@@ -652,6 +661,39 @@ flatpak_flathub_beta() {
   flatpak remote-add --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo
   printf "flathub beta activated \n"
 }
+
+
+flatpak_menu_programs() {
+  while [ 1 ] ; do
+    printf "$line \n"
+    printf " q quit \n"
+    printf " b back \n"
+    printf "10 firefox \n"
+    printf "$line \n"
+    printf "select option: "
+    read option
+
+    case ${option} in
+      q)
+      exit
+      ;;
+
+      b)
+      break
+      ;;
+
+      10)
+      flatpak install flathub --assumeyes org.mozilla.firefox
+      ;;
+      
+      *)
+      printf "invalid option \n"
+      ;;
+
+    esac
+done
+}
+
 
 umask_etc_profile_000() {
   cat <<'eof' >> /etc/profile
@@ -706,6 +748,13 @@ proxmox_apt() {
 deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
 eof
 
+}
+
+debian_update() {
+  flatpak update --assumeyes
+  apt update
+  apt full-upgrade -y
+  apt autopurge -y
 }
 
 debian_motd() {
@@ -880,32 +929,38 @@ virt-manager
 
 
 ========================================
+flatpak install flathub --assumeyes org.mozilla.firefox
+flatpak install flathub --assumeyes org.libreoffice.LibreOffice
+flatpak install flathub --assumeyes com.calibre_ebook.calibre
+flatpak install flathub --assumeyes org.kde.okular
+flatpak install flathub --assumeyes org.gnome.Evince
 
-firefox
-chromium
 
-qbittorrent
+flatpak install flathub --assumeyes org.qbittorrent.qBittorrent
 
-anydesk
+flatpak install flathub --assumeyes org.gimp.GIMP
+flatpak install flathub --assumeyes org.inkscape.Inkscape
+flatpak install flathub --assumeyes com.obsproject.Studio
+flatpak install flathub --assumeyes org.kde.kdenlive
 
-libreoffice
-calibre
-okular
-evince
+flatpak install flathub --assumeyes com.github.wwmm.pulseeffects
+flatpak install flathub --assumeyes com.github.wwmm.easyeffects
 
-celluloid
+flatpak install flathub --assumeyes com.github.tchx84.Flatseal
+flatpak install flathub --assumeyes com.usebottles.bottles
 
-pulseeffects
-pavucontrol
-easyeffects
 
-flatseal
+flatpak install flathub --assumeyes com.github.Eloston.UngoogledChromium
+flatpak install flathub --assumeyes org.chromium.Chromium
 
-telegram
+flatpak install flathub --assumeyes com.github.micahflee.torbrowser-launcher
+flatpak install flathub --assumeyes us.zoom.Zoom
+flatpak install flathub --assumeyes org.telegram.desktop
 
-cherrytree
-bottles
-zoom
+flatpak install flathub --assumeyes com.anydesk.Anydesk
+
+flatpak install flathub --assumeyes com.giuspen.cherrytree
+
 ========================================
 
 
