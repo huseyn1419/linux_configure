@@ -9,7 +9,7 @@
 #               variables start
 #========================================
 
-version="0.0.4"
+version="0.0.5"
 line="========================================"
 
 
@@ -155,7 +155,7 @@ menu_flatpak() {
     printf " b back \n"
     printf "10 add flathub.org \n"
     printf "11 add flathub.org beta \n"
-    printf "12 programs"
+    printf "12 programs \n"
     printf "$line \n"
     printf "select option: "
     read option
