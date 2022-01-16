@@ -9,7 +9,7 @@
 #               variables start
 #========================================
 
-version="0.0.5"
+version="0.0.6"
 line="========================================"
 
 
@@ -196,12 +196,13 @@ menu_debian() {
     printf " q quit \n"
     printf " b back \n"
     printf "10 update \n"
-    printf "11 keyboard layout \n"
-    printf "12 apt repositories \n"
-    printf "13 flatpak \n"
-    printf "14 grub \n"
-    printf "15 enable multi arch i386 \n"
-    printf "16 empty /etc/motd \n"
+    printf "11 export update.sh \n"
+    printf "12 keyboard layout \n"
+    printf "13 apt repositories \n"
+    printf "14 flatpak \n"
+    printf "15 grub \n"
+    printf "16 enable multi arch i386 \n"
+    printf "17 empty /etc/motd \n"
     printf "20 server gui lightweight \n"
     printf "21 auto configure \n"
     printf "99 write how-to to file \n"
@@ -223,26 +224,30 @@ menu_debian() {
       ;;
       
       11)
+      debian_update_export
+      ;;
+      
+      12)
       menu_debian_keyboard_layout
       ;;
 
-      12)
+      13)
       menu_debian_apt
       ;;
 
-      13)
+      14)
       menu_debian_flatpak
       ;;
 
-      14)
+      15)
       menu_debian_grub
       ;;
 
-      15)
+      16)
       debian_multiarch
       ;;
       
-      16)
+      17)
       debian_motd
       ;;
 
@@ -743,12 +748,14 @@ eof
 
 }
 
+
 proxmox_apt() {
   cat <<'eof' > /etc/apt/sources.list.d/pve-no-subscription.list
 deb http://download.proxmox.com/debian/pve bullseye pve-no-subscription
 eof
 
 }
+
 
 debian_update() {
   flatpak update --assumeyes
@@ -757,9 +764,27 @@ debian_update() {
   apt autopurge -y
 }
 
+
+debian_update_export() {
+  cat <<'eof' > update.sh
+#!/bin/sh
+
+# debian fast updater
+
+flatpak update --assumeyes
+apt update
+apt full-upgrade -y
+apt autopurge -y
+
+eof
+
+}
+
+
 debian_motd() {
   echo "" > /etc/motd
 }
+
 
 debian_configure_end_user_auto() {
   debian_motd
