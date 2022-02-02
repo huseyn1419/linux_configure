@@ -9,7 +9,7 @@
 #               variables start
 #========================================
 
-version="0.0.6"
+version="0.0.7"
 line="========================================"
 
 
@@ -771,10 +771,16 @@ debian_update_export() {
 
 # debian fast updater
 
-flatpak update --assumeyes
 apt update
 apt full-upgrade -y
 apt autopurge -y
+
+# check if flatpak exists
+if command -v flatpak > /dev/null ; then
+  flatpak update --assumeyes
+fi
+
+
 
 eof
 
